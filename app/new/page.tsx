@@ -154,7 +154,7 @@ export default function NewGamePage() {
                 type="number"
                 min="5"
                 max="50"
-                step="0.5"
+                step="any"
                 value={bumpPercent}
                 onChange={(e) => setBumpPercent(e.target.value)}
                 required

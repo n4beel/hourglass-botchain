@@ -393,11 +393,27 @@ contract HourglassTest is Test {
     uint256 idMax = hg.open(name48, 1 days, 5000, 100_000 ether);
     assertEq(hg.gameOf(idMax).minAdd, 100_000 ether);
 
-    // 2. Pagination views
+    // 2. Exact MAX_ADD boundary test
+    vm.deal(bob, 200_000 ether);
+    vm.prank(bob);
+    hg.add{value: 100_000 ether}(idMax);
+    assertEq(hg.gameOf(idMax).lastAdd, 100_000 ether);
+
+    // 3. Exact endsAt boundary test for timeLeft
+    uint64 endsAt = hg.gameOf(idMax).endsAt;
+    vm.warp(endsAt);
+    assertEq(hg.timeLeft(idMax), 0);
+
+    // 4. Pagination views
     (uint256[] memory ids, Hourglass.Game[] memory games, uint256 total) = hg.latest(0, 10);
     assertEq(ids.length, 2);
     assertEq(total, 2);
     assertEq(games[0].name, name48);
+
+    // Pagination slice clamping
+    (uint256[] memory sliceIds, , ) = hg.latest(1, 5);
+    assertEq(sliceIds.length, 1);
+    assertEq(sliceIds[0], 1);
 
     // Offset out of range
     (uint256[] memory emptyIds, , ) = hg.latest(5, 10);
