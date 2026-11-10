@@ -28,7 +28,7 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
   const contractAddress = deployment.address;
 
   const [txBusy, setTxBusy] = useState(false);
-  const [flipped, setFlipped] = useState(false);
+  const [flipCount, setFlipCount] = useState(0);
   const [addLogs, setAddLogs] = useState<AddLog[]>([]);
   const [nowSec, setNowSec] = useState<bigint>(BigInt(Math.floor(Date.now() / 1000)));
 
@@ -163,7 +163,7 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
       });
 
       if (publicClient) await publicClient.waitForTransactionReceipt({ hash });
-      setFlipped(!flipped);
+      setFlipCount((n) => n + 1);
       toast("success", "Flipped!", `Added ${formatEther(latestReq)} BOT to the pot!`);
       await Promise.all([refetchGame(), refetchReq()]);
     } catch (err: any) {
@@ -254,7 +254,7 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
               lastPlayer={g.last}
               plays={g.plays}
               isEnded={isEnded}
-              flipped={flipped}
+              flipCount={flipCount}
             />
 
             {/* Flip / Action Area */}

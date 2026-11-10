@@ -52,3 +52,19 @@ html, body {
 .animate-trickle {
   animation: sandTrickle var(--flow-duration) infinite ease-in-out;
 }
+
+/* One flip when someone adds to the pot. It ends where it started, so the top bulb
+   always shows the time left and the bottom bulb the pot. */
+@keyframes glassFlip {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(180deg); }
+}
+
+.animate-glass-flip {
+  animation: glassFlip 0.7s ease-in-out 1;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-glass-flip { animation: none; }
+}

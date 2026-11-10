@@ -11,7 +11,8 @@ export interface HourglassGlassProps {
   lastPlayer: `0x${string}`;
   plays: number;
   isEnded: boolean;
-  flipped?: boolean;
+  /** Increments on every successful add; each change plays one flip, then the glass settles upright. */
+  flipCount?: number;
 }
 
 export default function HourglassGlass({
@@ -22,7 +23,7 @@ export default function HourglassGlass({
   lastPlayer,
   plays,
   isEnded,
-  flipped = false,
+  flipCount = 0,
 }: HourglassGlassProps) {
   const tableId = useId();
   const [showTable, setShowTable] = useState(false);
@@ -42,9 +43,8 @@ export default function HourglassGlass({
       <div className="relative w-full max-w-[340px] aspect-[4/5] p-2 flex items-center justify-center">
         <svg
           viewBox="0 0 200 260"
-          className={`w-full h-full transition-transform duration-700 ease-out ${
-            flipped ? "rotate-180" : ""
-          }`}
+          key={flipCount}
+          className={`w-full h-full ${flipCount > 0 ? "animate-glass-flip" : ""}`}
           aria-hidden="true"
         >
           <defs>
